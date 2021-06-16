@@ -1,11 +1,8 @@
 FROM debian:stable-slim as fetcher
-COPY build/fetch_binaries.sh /tmp/fetch_binaries.sh
 
 RUN apt-get update && apt-get install -y \
   curl \
   wget
-
-RUN /tmp/fetch_binaries.sh
 
 FROM alpine:3.13
 
@@ -60,15 +57,6 @@ RUN set -ex \
     git \
     zsh \
     websocat
-
-# Installing ctop - top-like container monitor
-COPY --from=fetcher /tmp/ctop /usr/local/bin/ctop
-
-# Installing calicoctl
-COPY --from=fetcher /tmp/calicoctl /usr/local/bin/calicoctl
-
-# Installing termshark
-COPY --from=fetcher /tmp/termshark /usr/local/bin/termshark
 
 # Setting User and Home
 USER root
